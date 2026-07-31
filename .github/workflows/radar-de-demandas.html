@@ -1,0 +1,675 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Radar de Demandas — O Estrategista de Dados</title>
+<style>
+:root {
+  --bg: #0D1117;
+  --surface: #161B22;
+  --surface-raised: #21262D;
+  --border: #30363D;
+  --text-primary: #E6EDF3;
+  --text-secondary: #8B949E;
+  --text-tertiary: #6E7681;
+  --accent: #58A6FF;
+  --positive: #3FB950;
+  --warning: #D29922;
+  --danger: #F85149;
+  --chart-1: #58A6FF;
+  --chart-2: #F85149;
+  --chart-3: #3FB950;
+  --chart-4: #A371F7;
+}
+* { box-sizing: border-box; margin: 0; padding: 0; }
+body {
+  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+  background: var(--bg);
+  color: var(--text-primary);
+  padding: 20px;
+  line-height: 1.5;
+}
+.container { max-width: 800px; margin: 0 auto; }
+
+/* Header */
+.header {
+  display: flex; align-items: center; gap: 14px;
+  margin-bottom: 24px;
+}
+.header-icon {
+  width: 44px; height: 44px; border-radius: 12px;
+  background: rgba(88,166,255,0.12);
+  display: flex; align-items: center; justify-content: center;
+  color: var(--accent); flex-shrink: 0;
+}
+.header h1 { font-size: 22px; font-weight: 600; }
+.header p { font-size: 14px; color: var(--text-secondary); margin-top: 2px; }
+.refresh-btn {
+  margin-left: auto; width: 36px; height: 36px; border-radius: 8px;
+  border: 1px solid var(--border); background: var(--surface);
+  color: var(--text-secondary); cursor: pointer;
+  display: flex; align-items: center; justify-content: center;
+}
+.refresh-btn:hover { background: var(--surface-raised); color: var(--text-primary); }
+.refresh-btn.spin { animation: spin 1s linear infinite; }
+@keyframes spin { to { transform: rotate(360deg); } }
+
+/* Tabs */
+.tabs {
+  display: flex; gap: 4px; margin-bottom: 20px;
+  border-bottom: 1px solid var(--border);
+}
+.tab {
+  flex: 1; display: flex; align-items: center; justify-content: center; gap: 8px;
+  padding: 12px 8px; border: none; background: transparent;
+  color: var(--text-secondary); font-size: 14px; cursor: pointer;
+  border-radius: 8px 8px 0 0; position: relative; transition: 0.15s;
+}
+.tab:hover { color: var(--text-primary); background: rgba(255,255,255,0.03); }
+.tab.active { color: var(--text-primary); font-weight: 500; }
+.tab.active::after {
+  content: ''; position: absolute; bottom: -1px; left: 0; right: 0;
+  height: 2px; background: var(--text-primary); border-radius: 2px 2px 0 0;
+}
+.badge {
+  font-size: 11px; padding: 1px 6px; border-radius: 10px;
+  background: var(--surface-raised); color: var(--text-secondary); min-width: 18px; text-align: center;
+}
+.tab.active .badge { background: rgba(88,166,255,0.15); color: var(--accent); }
+
+/* Panels */
+.panel { display: none; }
+.panel.active { display: block; }
+
+/* Filters */
+.filters { display: flex; flex-wrap: wrap; gap: 8px; margin-bottom: 16px; }
+.filter-chip {
+  padding: 6px 14px; border-radius: 6px; border: 1px solid var(--border);
+  background: var(--surface); color: var(--text-secondary); font-size: 13px;
+  cursor: pointer; transition: 0.15s;
+}
+.filter-chip:hover { background: var(--surface-raised); color: var(--text-primary); }
+.filter-chip.active {
+  background: var(--text-primary); color: var(--bg);
+  border-color: var(--text-primary); font-weight: 500;
+}
+
+/* Signal Cards */
+.signals-list { display: flex; flex-direction: column; gap: 10px; }
+.signal-card {
+  display: flex; align-items: flex-start; gap: 14px;
+  padding: 14px; border-radius: 10px; border: 1px solid var(--border);
+  background: var(--surface); cursor: pointer; transition: 0.15s;
+}
+.signal-card:hover { border-color: var(--text-tertiary); background: var(--surface-raised); }
+.signal-card.selected { border-color: var(--accent); background: rgba(88,166,255,0.05); }
+.signal-icon {
+  width: 36px; height: 36px; border-radius: 8px;
+  display: flex; align-items: center; justify-content: center; flex-shrink: 0; margin-top: 2px;
+}
+.signal-icon.trend { background: rgba(88,166,255,0.12); color: var(--chart-1); }
+.signal-icon.complaint { background: rgba(248,81,73,0.12); color: var(--chart-2); }
+.signal-icon.data { background: rgba(63,185,80,0.12); color: var(--chart-3); }
+.signal-icon.news { background: rgba(163,113,247,0.12); color: var(--chart-4); }
+.signal-body { flex: 1; min-width: 0; }
+.signal-title { font-size: 14px; font-weight: 500; margin-bottom: 4px; }
+.signal-desc { font-size: 13px; color: var(--text-secondary); margin-bottom: 8px; line-height: 1.4; }
+.signal-meta { display: flex; flex-wrap: wrap; align-items: center; gap: 10px; font-size: 12px; color: var(--text-tertiary); }
+.signal-tag { padding: 2px 8px; border-radius: 4px; font-size: 11px; font-weight: 500; }
+.signal-tag.trend { background: rgba(88,166,255,0.12); color: var(--chart-1); }
+.signal-tag.complaint { background: rgba(248,81,73,0.12); color: var(--chart-2); }
+.signal-tag.data { background: rgba(63,185,80,0.12); color: var(--chart-3); }
+.signal-tag.news { background: rgba(163,113,247,0.12); color: var(--chart-4); }
+.strength-bar { width: 40px; height: 4px; border-radius: 2px; background: var(--surface-raised); overflow: hidden; display: inline-block; vertical-align: middle; margin-right: 4px; }
+.strength-fill { height: 100%; border-radius: 2px; }
+.signal-actions { display: flex; flex-direction: column; gap: 6px; opacity: 0; transition: 0.15s; }
+.signal-card:hover .signal-actions, .signal-card.selected .signal-actions { opacity: 1; }
+.icon-btn {
+  width: 30px; height: 30px; border-radius: 6px; border: 1px solid var(--border);
+  background: var(--surface); color: var(--text-secondary); cursor: pointer;
+  display: flex; align-items: center; justify-content: center;
+}
+.icon-btn:hover { background: var(--surface-raised); color: var(--text-primary); }
+
+/* Idea Generator */
+.idea-generator {
+  background: var(--surface); border: 1px solid var(--border); border-radius: 10px;
+  padding: 16px; margin-bottom: 16px;
+}
+.gen-header { display: flex; align-items: center; justify-content: space-between; margin-bottom: 12px; }
+.gen-header h3 { font-size: 15px; font-weight: 500; }
+.gen-btn {
+  display: flex; align-items: center; gap: 6px;
+  padding: 8px 16px; border-radius: 8px; border: none;
+  background: var(--text-primary); color: var(--bg); font-size: 13px; font-weight: 500;
+  cursor: pointer;
+}
+.gen-btn:hover { opacity: 0.85; }
+.gen-options { display: flex; flex-wrap: wrap; gap: 16px; }
+.gen-options label { display: flex; align-items: center; gap: 6px; font-size: 13px; color: var(--text-secondary); cursor: pointer; }
+.gen-options input { accent-color: var(--text-primary); width: 16px; height: 16px; }
+
+/* Idea Cards */
+.ideas-list { display: flex; flex-direction: column; gap: 10px; }
+.idea-card {
+  display: flex; align-items: flex-start; gap: 14px;
+  padding: 14px; border-radius: 10px; border: 1px solid var(--border);
+  background: var(--surface); transition: 0.15s;
+}
+.idea-card:hover { background: var(--surface-raised); }
+.idea-card.added { border-color: var(--positive); background: rgba(63,185,80,0.05); }
+.idea-number {
+  width: 28px; height: 28px; border-radius: 50%;
+  background: var(--surface-raised); color: var(--text-secondary);
+  font-size: 12px; font-weight: 600; display: flex; align-items: center; justify-content: center; flex-shrink: 0;
+}
+.idea-body { flex: 1; min-width: 0; }
+.idea-format {
+  display: inline-flex; align-items: center; gap: 4px;
+  font-size: 11px; padding: 2px 8px; border-radius: 4px; margin-bottom: 6px; font-weight: 500;
+}
+.idea-format.carousel { background: rgba(88,166,255,0.12); color: var(--chart-1); }
+.idea-format.video { background: rgba(248,81,73,0.12); color: var(--chart-2); }
+.idea-format.newsletter { background: rgba(63,185,80,0.12); color: var(--chart-3); }
+.idea-format.deep { background: rgba(163,113,247,0.12); color: var(--chart-4); }
+.idea-title { font-size: 14px; font-weight: 500; margin-bottom: 4px; }
+.idea-desc { font-size: 13px; color: var(--text-secondary); margin-bottom: 8px; line-height: 1.4; }
+.idea-dataset { font-size: 12px; color: var(--text-tertiary); display: flex; align-items: center; gap: 6px; }
+.idea-actions { display: flex; flex-direction: column; gap: 6px; }
+.idea-actions .icon-btn.added { background: var(--positive); color: white; border-color: var(--positive); }
+
+/* Pauta */
+.pauta-header { display: flex; align-items: center; justify-content: space-between; margin-bottom: 16px; }
+.pauta-header h3 { font-size: 15px; font-weight: 500; }
+.pauta-actions { display: flex; gap: 8px; }
+.action-btn {
+  display: flex; align-items: center; gap: 6px;
+  padding: 6px 14px; border-radius: 8px; border: 1px solid var(--border);
+  background: var(--surface); color: var(--text-secondary); font-size: 13px; cursor: pointer;
+}
+.action-btn:hover { background: var(--surface-raised); color: var(--text-primary); }
+
+.week-grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: 10px; margin-bottom: 16px; }
+.day-col {
+  background: var(--surface); border: 1px solid var(--border); border-radius: 10px;
+  padding: 12px; min-height: 140px;
+}
+.day-label { font-size: 12px; font-weight: 600; color: var(--text-secondary); text-align: center; padding-bottom: 8px; margin-bottom: 8px; border-bottom: 1px solid var(--border); text-transform: uppercase; }
+.day-slots { display: flex; flex-direction: column; gap: 6px; min-height: 60px; }
+.day-slot {
+  padding: 10px; border-radius: 6px; background: var(--surface-raised);
+  border: 1px solid var(--border); font-size: 12px; color: var(--text-primary);
+  cursor: grab; position: relative;
+}
+.day-slot:hover { border-color: var(--text-tertiary); }
+.day-slot .slot-remove {
+  position: absolute; top: 4px; right: 4px; width: 20px; height: 20px;
+  border-radius: 4px; border: none; background: transparent; color: var(--text-tertiary);
+  cursor: pointer; display: flex; align-items: center; justify-content: center;
+  opacity: 0; transition: 0.15s;
+}
+.day-slot:hover .slot-remove { opacity: 1; }
+.day-slot:hover .slot-remove:hover { color: var(--danger); }
+.day-slot-empty { text-align: center; padding: 24px 8px; color: var(--text-tertiary); font-size: 12px; font-style: italic; }
+
+.pauta-summary { background: var(--surface); border: 1px solid var(--border); border-radius: 10px; padding: 16px; }
+.pauta-summary h4 { margin: 0 0 12px; font-size: 14px; font-weight: 500; }
+.summary-stats { display: grid; grid-template-columns: repeat(3, 1fr); gap: 12px; }
+.stat-box { text-align: center; padding: 12px; border-radius: 8px; background: var(--surface-raised); }
+.stat-value { font-size: 24px; font-weight: 600; color: var(--text-primary); line-height: 1; }
+.stat-label { font-size: 12px; color: var(--text-secondary); margin-top: 4px; }
+
+.empty-state { text-align: center; padding: 40px 20px; color: var(--text-tertiary); }
+.empty-state svg { width: 48px; height: 48px; margin-bottom: 12px; opacity: 0.4; }
+
+@media (max-width: 640px) {
+  .week-grid { grid-template-columns: repeat(2, 1fr); }
+  .tabs { font-size: 12px; }
+  .tab { padding: 10px 4px; gap: 4px; }
+  .summary-stats { grid-template-columns: repeat(2, 1fr); }
+}
+</style>
+</head>
+<body>
+
+<div class="container">
+  <!-- Header -->
+  <div class="header">
+    <div class="header-icon">
+      <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
+        <ellipse cx="12" cy="12" rx="10" ry="10"/>
+        <path d="M12 6v12M6 12h12"/>
+        <path d="M12 2a15.3 15.3 0 0 1 4 10 15.3 15.3 0 0 1-4 10 15.3 15.3 0 0 1-4-10 15.3 15.3 0 0 1 4-10z"/>
+      </svg>
+    </div>
+    <div>
+      <h1>Radar de Demandas</h1>
+      <p>Captura automática de sinais de mercado para geração de pautas</p>
+      <p id="trends-status" style="font-size:11px;color:var(--text-tertiary);margin-top:4px;">Verificando conexão com Google Trends…</p>
+    </div>
+    <button class="refresh-btn" onclick="refreshSignals()" title="Atualizar sinais">
+      <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
+        <polyline points="23 4 23 10 17 10"/>
+        <path d="M20.49 15a9 9 0 1 1-2.12-9.36L23 10"/>
+      </svg>
+    </button>
+  </div>
+
+  <!-- Tabs -->
+  <div class="tabs">
+    <button class="tab active" onclick="switchTab('signals')" data-tab="signals">
+      <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><circle cx="11" cy="11" r="8"/><path d="m21 21-4.35-4.35"/></svg>
+      Sinais
+      <span class="badge" id="badge-signals">12</span>
+    </button>
+    <button class="tab" onclick="switchTab('ideas')" data-tab="ideas">
+      <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><polyline points="22 12 18 12 15 21 9 3 6 12 2 12"/></svg>
+      Ideias
+      <span class="badge" id="badge-ideas">0</span>
+    </button>
+    <button class="tab" onclick="switchTab('pauta')" data-tab="pauta">
+      <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M9 11l3 3L22 4"/><path d="M21 12v7a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11"/></svg>
+      Pauta
+      <span class="badge" id="badge-pauta">0</span>
+    </button>
+  </div>
+
+  <!-- Panel: Sinais -->
+  <div class="panel active" id="panel-signals">
+    <div class="filters">
+      <button class="filter-chip active" onclick="filterSignals('all')">Todos</button>
+      <button class="filter-chip" onclick="filterSignals('trend')">📈 Trends</button>
+      <button class="filter-chip" onclick="filterSignals('complaint')">⚠️ Reclamações</button>
+      <button class="filter-chip" onclick="filterSignals('data')">📊 Dados IBGE</button>
+      <button class="filter-chip" onclick="filterSignals('news')">🔔 Notícias</button>
+    </div>
+    <div class="signals-list" id="signals-list"></div>
+  </div>
+
+  <!-- Panel: Ideias -->
+  <div class="panel" id="panel-ideas">
+    <div class="idea-generator">
+      <div class="gen-header">
+        <h3>Gerador de Ideias</h3>
+        <button class="gen-btn" onclick="generateIdeas()">
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg>
+          Gerar novas ideias
+        </button>
+      </div>
+      <div class="gen-options">
+        <label><input type="checkbox" id="opt-linkedin" checked> Carrossel LinkedIn</label>
+        <label><input type="checkbox" id="opt-video" checked> Vídeo 60s</label>
+        <label><input type="checkbox" id="opt-newsletter" checked> Newsletter</label>
+        <label><input type="checkbox" id="opt-deep"> Análise Profunda</label>
+      </div>
+    </div>
+    <div class="ideas-list" id="ideas-list"></div>
+  </div>
+
+  <!-- Panel: Pauta -->
+  <div class="panel" id="panel-pauta">
+    <div class="pauta-header">
+      <h3>Pauta Semanal — <span id="week-label">Semana 1</span></h3>
+      <div class="pauta-actions">
+        <button class="action-btn" onclick="exportPauta()">
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg>
+          Exportar
+        </button>
+        <button class="action-btn" onclick="copyPauta()">
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><rect x="9" y="9" width="13" height="13" rx="2" ry="2"/><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"/></svg>
+          Copiar
+        </button>
+      </div>
+    </div>
+    <div class="week-grid">
+      <div class="day-col"><div class="day-label">Segunda</div><div class="day-slots" id="day-seg"></div></div>
+      <div class="day-col"><div class="day-label">Quarta</div><div class="day-slots" id="day-qua"></div></div>
+      <div class="day-col"><div class="day-label">Sexta</div><div class="day-slots" id="day-sex"></div></div>
+      <div class="day-col"><div class="day-label">Domingo</div><div class="day-slots" id="day-dom"></div></div>
+    </div>
+    <div class="pauta-summary" id="pauta-summary"></div>
+  </div>
+</div>
+
+<script>
+// ========== DADOS ==========
+const signalsData = [
+  { id: 1, type: 'trend', title: '"Alimentação sem glúten" — buscas +340% no Google Trends', desc: 'Crescimento explosivo de buscas por produtos sem glúten em cidades do interior de SP e MG. Nenhuma marca local atende.', source: 'Google Trends', date: 'Há 2h', strength: 95 },
+  { id: 2, type: 'data', title: 'IBGE: 3 cidades do interior cresceram 40% em renda em 2 anos', desc: 'Paulínia (SP), Maricá (RJ) e Canaã dos Carajás (PA) lideram crescimento de PIB per capita. Zero presença de varejo premium.', source: 'IBGE — PIB 2021', date: 'Há 5h', strength: 90 },
+  { id: 3, type: 'complaint', title: 'Reclame Aqui: 2.847 reclamações sobre entrega no interior', desc: 'Logística é o maior gargalo do e-commerce brasileiro. Custo de frete consome 65,9% dos custos. Oportunidade para modelos de compra coletiva.', source: 'Reclame Aqui', date: 'Há 8h', strength: 85 },
+  { id: 4, type: 'news', title: 'TikTok Shop chega oficialmente ao Brasil em 2026', desc: 'Live commerce ainda é incipiente no Brasil. Na China, 833 milhões de pessoas compram via live. Gap enorme para preencher.', source: 'TechCrunch BR', date: 'Há 12h', strength: 80 },
+  { id: 5, type: 'trend', title: '"Curso de Python" — buscas triplicaram em cidades do Nordeste', desc: 'Demanda por educação em tecnologia cresce em cidades médias do NE. Nenhuma oferta local de qualidade.', source: 'Google Trends', date: 'Há 1d', strength: 75 },
+  { id: 6, type: 'data', title: 'Banco Central: inadimplência cai em cidades com PIB per capita > R$ 100k', desc: 'Correlação inversa entre renda e inadimplência. Cidades ricas de médio porte têm crédito subutilizado.', source: 'Banco Central', date: 'Há 1d', strength: 70 },
+  { id: 7, type: 'complaint', title: 'Reclame Aqui: Pet shops lideram reclamações em cidades de 50-100k hab', desc: 'Demanda por produtos pet premium não atendida no interior. Marcas nacionais não entregam. Oportunidade para e-commerce de nicho.', source: 'Reclame Aqui', date: 'Há 2d', strength: 72 },
+  { id: 8, type: 'news', title: 'Nova lei de dados pessoais: empresas precisam de compliance até dezembro', desc: 'LGPD 2.0 exige adaptação. PMEs não sabem por onde começar. Oportunidade para consultoria de dados e privacidade.', source: 'G1 Economia', date: 'Há 2d', strength: 65 },
+  { id: 9, type: 'trend', title: '"Terapia online" — buscas estáveis, mas "terapia barata" explode', desc: 'Crise econômica empurra demanda por saúde mental acessível. Apps de terapia com preço popular crescem 200%.', source: 'Google Trends', date: 'Há 3d', strength: 78 },
+  { id: 10, type: 'data', title: 'Receita Federal: 47 mil novos CNPJs em alimentação saudável em 2026', desc: 'Setor de alimentos funcionais e sem alergênicos é o que mais cresce em abertura de empresas. Dados de janeiro a junho.', source: 'Receita Federal', date: 'Há 3d', strength: 82 },
+  { id: 11, type: 'complaint', title: 'Reclame Aqui: 89% das reclamações de e-commerce citam "atraso no frete"', desc: 'Mesmo problema, novo ângulo: não é só o custo, é a previsibilidade. Clientes pagam mais por entrega garantida.', source: 'Reclame Aqui', date: 'Há 4d', strength: 68 },
+  { id: 12, type: 'news', title: 'Microsoft lança copilot para Power BI no Brasil', desc: 'IA generativa entra em ferramentas de BI. Demanda por profissionais que saibam usar IA + dados vai explodir.', source: 'Canaltech', date: 'Há 4d', strength: 60 }
+];
+
+// ===== Google Trends real =====
+// Gerado por fetch_trends.py (pasta radar-trends/), rodando toda segunda via
+// GitHub Actions. Troque pela URL raw do SEU repositório depois de publicá-lo:
+// https://raw.githubusercontent.com/SEU-USUARIO/radar-trends/main/signals-trends.json
+const REAL_TRENDS_URL = 'https://raw.githubusercontent.com/SEU-USUARIO/radar-trends/main/signals-trends.json';
+
+async function loadRealTrends() {
+  const statusEl = document.getElementById('trends-status');
+  if (!REAL_TRENDS_URL || REAL_TRENDS_URL.includes('SEU-USUARIO')) {
+    if (statusEl) statusEl.textContent = 'Trends mockado — configure REAL_TRENDS_URL no código para conectar dados reais.';
+    return;
+  }
+  try {
+    const res = await fetch(REAL_TRENDS_URL, { cache: 'no-store' });
+    if (!res.ok) throw new Error('HTTP ' + res.status);
+    const realTrends = await res.json();
+    if (!Array.isArray(realTrends) || realTrends.length === 0) throw new Error('resposta vazia');
+    const nonTrend = signalsData.filter(s => s.type !== 'trend');
+    const maxId = Math.max(0, ...signalsData.map(s => s.id));
+    const withIds = realTrends.map((s, i) => ({ ...s, id: maxId + i + 1, date: 'Atualizado em ' + s.date, live: true }));
+    signalsData.length = 0;
+    signalsData.push(...withIds, ...nonTrend);
+    if (statusEl) statusEl.textContent = `Trends real conectado — ${withIds.length} sinais atualizados via GitHub Actions.`;
+    renderSignals();
+  } catch (e) {
+    if (statusEl) statusEl.textContent = 'Não consegui carregar o Trends real agora (mostrando dados de exemplo).';
+    console.warn('loadRealTrends falhou:', e);
+  }
+}
+
+const ideaTemplates = {
+  carousel: [
+    { title: 'O mapa do tesouro que o IBGE desenhou e ninguém leu', desc: '5.570 municípios analisados. 15 cidades com PIB per capita 10x acima da média e zero concorrência de marca.', dataset: 'IBGE PIB 2021 + Censo 2022' },
+    { title: 'São Paulo tem 12 milhões de pessoas. Essa cidade de 11 mil tem 6x mais renda.', desc: 'Comparativo chocante entre capitais e cidades ricas do interior. Onde o marketing brasileiro está errando.', dataset: 'IBGE PIB dos Municípios' },
+    { title: 'Você gasta R$ 10 mil em anúncios em SP. E se R$ 1 mil em Paulínia desse o mesmo resultado?', desc: 'Análise de CPM por cidade baseada em dados de poder de compra vs. concorrência de anúncios.', dataset: 'IBGE + Meta Ads Library' }
+  ],
+  video: [
+    { title: 'Essa cidade tem 11 mil habitantes e renda de R$ 642 mil per capita', desc: 'Vídeo de 60s mostrando o gráfico de São Gonçalo do Rio Abaixo vs. Brasília. Impacto visual imediato.', dataset: 'IBGE PIB 2021' },
+    { title: 'Como eu uso dados do governo para encontrar clientes escondidos', desc: 'Tutorial rápido: acessar dados.gov.br, cruzar PIB + população, identificar oportunidade em 5 min.', dataset: 'dados.gov.br' }
+  ],
+  newsletter: [
+    { title: 'O Ouro do Interior: 3 cidades com renda de milionário e zero concorrência', desc: 'Análise aprofundada de São Gonçalo do Rio Abaixo, Paulínia e Canaã dos Carajás. Oportunidades por setor.', dataset: 'IBGE + Receita Federal + Google Trends' },
+    { title: 'A ferramenta de R$ 0 que substitui uma consultoria de R$ 5.000', desc: 'Google Trends + IBGE + Excel. Como fazer análise de mercado sozinho em 30 min.', dataset: 'Ferramentas gratuitas' }
+  ],
+  deep: [
+    { title: 'Relatório: O Mercado Esquecido — 2.983 cidades brasileiras de médio porte', desc: 'Estudo completo com mapa de calor, ranking por setor, análise de concorrência e recomendações por região.', dataset: 'IBGE + Receita Federal + Banco Central' }
+  ]
+};
+
+let selectedSignals = new Set();
+let generatedIdeas = [];
+let pauta = { seg: [], qua: [], sex: [], dom: [] };
+let currentFilter = 'all';
+
+const typeLabels = { trend: 'Trend', complaint: 'Reclamação', data: 'Dados', news: 'Notícia' };
+const typeColors = { trend: '#58A6FF', complaint: '#F85149', data: '#3FB950', news: '#A371F7' };
+const fmtLabels = { carousel: 'Carrossel', video: 'Vídeo 60s', newsletter: 'Newsletter', deep: 'Análise Profunda' };
+
+// ========== FUNÇÕES ==========
+function renderSignals() {
+  const list = document.getElementById('signals-list');
+  const filtered = currentFilter === 'all' ? signalsData : signalsData.filter(s => s.type === currentFilter);
+  
+  list.innerHTML = filtered.map(s => `
+    <div class="signal-card ${selectedSignals.has(s.id) ? 'selected' : ''}" onclick="toggleSignal(${s.id})">
+      <div class="signal-icon ${s.type}">
+        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
+          ${s.type === 'trend' ? '<polyline points="22 12 18 12 15 21 9 3 6 12 2 12"/>' : 
+            s.type === 'complaint' ? '<path d="M10.29 3.86L1.82 18a2 2 0 0 0 1.71 3h16.94a2 2 0 0 0 1.71-3L13.71 3.86a2 2 0 0 0-3.42 0z"/><line x1="12" y1="9" x2="12" y2="13"/><line x1="12" y1="17" x2="12.01" y2="17"/>' :
+            s.type === 'data' ? '<path d="M21.21 15.89A10 10 0 1 1 8 2.83"/><path d="M22 12A10 10 0 0 0 12 2v10z"/>' :
+            '<path d="M18 8A6 6 0 0 0 6 8c0 7-3 9-3 9h18s-3-2-3-9"/><path d="M13.73 21a2 2 0 0 1-3.46 0"/>'}
+        </svg>
+      </div>
+      <div class="signal-body">
+        <p class="signal-title">${s.title}</p>
+        <p class="signal-desc">${s.desc}</p>
+        <div class="signal-meta">
+          <span class="signal-tag ${s.type}">${typeLabels[s.type]}</span>
+          <span>${s.source}</span>
+          <span>${s.date}</span>
+          <span class="signal-strength">Força <span class="strength-bar"><span class="strength-fill" style="width:${s.strength}%;background:${s.strength>80?'var(--positive)':s.strength>60?'var(--warning)':'var(--text-tertiary)'}"></span></span> ${s.strength}%</span>
+          ${s.live ? '<span style="color:var(--positive);font-weight:600;">● dado real</span>' : ''}
+        </div>
+      </div>
+      <div class="signal-actions">
+        <button class="icon-btn" onclick="event.stopPropagation();generateFromSignal(${s.id})" title="Gerar ideias">
+          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg>
+        </button>
+        <button class="icon-btn" onclick="event.stopPropagation();copySignal(${s.id})" title="Copiar">
+          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><rect x="9" y="9" width="13" height="13" rx="2" ry="2"/><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"/></svg>
+        </button>
+      </div>
+    </div>
+  `).join('');
+  
+  document.getElementById('badge-signals').textContent = filtered.length;
+}
+
+function toggleSignal(id) {
+  selectedSignals.has(id) ? selectedSignals.delete(id) : selectedSignals.add(id);
+  renderSignals();
+}
+
+function filterSignals(type) {
+  currentFilter = type;
+  document.querySelectorAll('.filter-chip').forEach(b => b.classList.remove('active'));
+  event.target.classList.add('active');
+  renderSignals();
+}
+
+function generateFromSignal(signalId) {
+  const signal = signalsData.find(s => s.id === signalId);
+  if (!signal) return;
+  const formats = [];
+  if (document.getElementById('opt-linkedin').checked) formats.push('carousel');
+  if (document.getElementById('opt-video').checked) formats.push('video');
+  if (document.getElementById('opt-newsletter').checked) formats.push('newsletter');
+  if (document.getElementById('opt-deep').checked) formats.push('deep');
+  if (formats.length === 0) { alert('Selecione pelo menos um formato'); return; }
+  
+  formats.forEach(fmt => {
+    const t = ideaTemplates[fmt][Math.floor(Math.random() * ideaTemplates[fmt].length)];
+    generatedIdeas.push({ id: Date.now() + Math.random(), format: fmt, title: t.title, desc: t.desc + ' | Baseado em: ' + signal.title, dataset: t.dataset });
+  });
+  updateBadge('ideas', generatedIdeas.length);
+  switchTab('ideas');
+}
+
+function generateIdeas() {
+  const formats = [];
+  if (document.getElementById('opt-linkedin').checked) formats.push('carousel');
+  if (document.getElementById('opt-video').checked) formats.push('video');
+  if (document.getElementById('opt-newsletter').checked) formats.push('newsletter');
+  if (document.getElementById('opt-deep').checked) formats.push('deep');
+  if (formats.length === 0) { alert('Selecione pelo menos um formato'); return; }
+  
+  formats.forEach(fmt => {
+    const t = ideaTemplates[fmt][Math.floor(Math.random() * ideaTemplates[fmt].length)];
+    generatedIdeas.push({ id: Date.now() + Math.random(), format: fmt, title: t.title, desc: t.desc, dataset: t.dataset });
+  });
+  updateBadge('ideas', generatedIdeas.length);
+  renderIdeas();
+}
+
+function renderIdeas() {
+  const list = document.getElementById('ideas-list');
+  if (generatedIdeas.length === 0) {
+    list.innerHTML = '<div class="empty-state"><p>Selecione sinais de mercado ou clique em "Gerar novas ideias" para começar.</p></div>';
+    return;
+  }
+  list.innerHTML = generatedIdeas.map((idea, idx) => `
+    <div class="idea-card ${isInPauta(idea.id) ? 'added' : ''}">
+      <div class="idea-number">${idx + 1}</div>
+      <div class="idea-body">
+        <span class="idea-format ${idea.format}">${fmtLabels[idea.format]}</span>
+        <p class="idea-title">${idea.title}</p>
+        <p class="idea-desc">${idea.desc}</p>
+        <div class="idea-dataset">
+          <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><ellipse cx="12" cy="12" rx="10" ry="10"/><path d="M12 6v12M6 12h12"/></svg>
+          ${idea.dataset}
+        </div>
+      </div>
+      <div class="idea-actions">
+        <button class="icon-btn ${isInPauta(idea.id) ? 'added' : ''}" onclick="addToPauta('${idea.id}')" title="${isInPauta(idea.id) ? 'Na pauta' : 'Adicionar à pauta'}">
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg>
+        </button>
+        <button class="icon-btn" onclick="copyIdea('${idea.id}')" title="Copiar">
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><rect x="9" y="9" width="13" height="13" rx="2" ry="2"/><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"/></svg>
+        </button>
+        <button class="icon-btn" onclick="removeIdea('${idea.id}')" title="Remover">
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><polyline points="3 6 5 6 21 6"/><path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"/></svg>
+        </button>
+      </div>
+    </div>
+  `).join('');
+}
+
+function isInPauta(id) { return Object.values(pauta).some(d => d.some(i => i.id == id)); }
+
+function addToPauta(ideaId) {
+  const idea = generatedIdeas.find(i => i.id == ideaId);
+  if (!idea) return;
+  const days = ['seg','qua','sex','dom'];
+  const target = days.sort((a,b) => pauta[a].length - pauta[b].length)[0];
+  pauta[target].push({...idea});
+  updateBadge('pauta', countPauta());
+  renderIdeas();
+  renderPauta();
+}
+
+function removeFromPauta(day, idx) {
+  pauta[day].splice(idx, 1);
+  updateBadge('pauta', countPauta());
+  renderPauta();
+  renderIdeas();
+}
+
+function countPauta() { return Object.values(pauta).reduce((s,d) => s+d.length, 0); }
+
+function renderPauta() {
+  const days = ['seg','qua','sex','dom'];
+  days.forEach(day => {
+    const el = document.getElementById('day-'+day);
+    if (pauta[day].length === 0) {
+      el.innerHTML = '<div class="day-slot-empty">Clique em ✓ nas ideias para adicionar</div>';
+    } else {
+      el.innerHTML = pauta[day].map((item, idx) => `
+        <div class="day-slot">
+          <strong>${item.title.substring(0,35)}${item.title.length>35?'...':''}</strong>
+          <div style="font-size:11px;color:var(--text-tertiary);margin-top:3px;">${fmtLabels[item.format]}</div>
+          <button class="slot-remove" onclick="removeFromPauta('${day}',${idx})">
+            <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>
+          </button>
+        </div>
+      `).join('');
+    }
+  });
+  
+  const total = countPauta();
+  const byFmt = {};
+  Object.values(pauta).flat().forEach(i => byFmt[i.format] = (byFmt[i.format]||0)+1);
+  const summary = document.getElementById('pauta-summary');
+  if (total > 0) {
+    summary.innerHTML = `
+      <h4>Resumo da semana</h4>
+      <div class="summary-stats">
+        <div class="stat-box"><div class="stat-value">${total}</div><div class="stat-label">conteúdos</div></div>
+        <div class="stat-box"><div class="stat-value">${byFmt.carousel||0}</div><div class="stat-label">carrosséis</div></div>
+        <div class="stat-box"><div class="stat-value">${byFmt.video||0}</div><div class="stat-label">vídeos</div></div>
+        <div class="stat-box"><div class="stat-value">${byFmt.newsletter||0}</div><div class="stat-label">newsletters</div></div>
+        <div class="stat-box"><div class="stat-value">${byFmt.deep||0}</div><div class="stat-label">análises</div></div>
+        <div class="stat-box"><div class="stat-value">~${Math.round(total*2.5)}h</div><div class="stat-label">prod. estimada</div></div>
+      </div>`;
+  } else summary.innerHTML = '';
+}
+
+function copyIdea(id) {
+  const idea = generatedIdeas.find(i => i.id == id);
+  if (!idea) return;
+  navigator.clipboard.writeText(`${idea.title}\n\n${idea.desc}\n\nFormato: ${fmtLabels[idea.format]}\nDataset: ${idea.dataset}`);
+}
+
+function copySignal(id) {
+  const s = signalsData.find(s => s.id === id);
+  if (!s) return;
+  navigator.clipboard.writeText(`${s.title}\n\n${s.desc}\n\nFonte: ${s.source} | Força: ${s.strength}%`);
+}
+
+function removeIdea(id) {
+  generatedIdeas = generatedIdeas.filter(i => i.id != id);
+  Object.keys(pauta).forEach(d => pauta[d] = pauta[d].filter(i => i.id != id));
+  updateBadge('ideas', generatedIdeas.length);
+  updateBadge('pauta', countPauta());
+  renderIdeas();
+  renderPauta();
+}
+
+function switchTab(name) {
+  document.querySelectorAll('.tab').forEach(t => t.classList.remove('active'));
+  document.querySelectorAll('.panel').forEach(p => p.classList.remove('active'));
+  document.querySelector(`[data-tab="${name}"]`).classList.add('active');
+  document.getElementById('panel-'+name).classList.add('active');
+  if (name === 'ideas') renderIdeas();
+  if (name === 'pauta') renderPauta();
+}
+
+function updateBadge(tab, count) { document.getElementById('badge-'+tab).textContent = count; }
+
+function refreshSignals() {
+  const btn = document.querySelector('.refresh-btn');
+  btn.classList.add('spin');
+  setTimeout(() => {
+    btn.classList.remove('spin');
+    signalsData.forEach(s => s.strength = Math.min(100, Math.max(50, s.strength + Math.floor(Math.random()*10-5))));
+    renderSignals();
+  }, 1200);
+}
+
+function exportPauta() {
+  const lines = ['PAUTA SEMANAL — O Estrategista de Dados','========================================',''];
+  const dayNames = {seg:'SEGUNDA',qua:'QUARTA',sex:'SEXTA',dom:'DOMINGO'};
+  Object.entries(pauta).forEach(([day,items]) => {
+    lines.push(dayNames[day]+':');
+    lines.push('-'.repeat(40));
+    if (items.length === 0) lines.push('(vazio)'); else {
+      items.forEach((it,i) => {
+        lines.push(`${i+1}. [${fmtLabels[it.format]}] ${it.title}`);
+        lines.push(`   ${it.desc}`);
+        lines.push(`   Dataset: ${it.dataset}`);
+        lines.push('');
+      });
+    }
+    lines.push('');
+  });
+  const blob = new Blob([lines.join('\n')], {type:'text/plain'});
+  const url = URL.createObjectURL(blob);
+  const a = document.createElement('a'); a.href = url; a.download = 'pauta-semanal.txt'; a.click();
+  URL.revokeObjectURL(url);
+}
+
+function copyPauta() {
+  const lines = ['PAUTA SEMANAL — O Estrategista de Dados',''];
+  const dayNames = {seg:'SEGUNDA',qua:'QUARTA',sex:'SEXTA',dom:'DOMINGO'};
+  Object.entries(pauta).forEach(([day,items]) => {
+    lines.push(dayNames[day]+':');
+    items.forEach((it,i) => lines.push(`${i+1}. [${fmtLabels[it.format]}] ${it.title}`));
+    lines.push('');
+  });
+  navigator.clipboard.writeText(lines.join('\n')).then(() => {
+    const btn = event.target.closest('.action-btn');
+    const orig = btn.innerHTML;
+    btn.innerHTML = '<svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg> Copiado!';
+    setTimeout(() => btn.innerHTML = orig, 2000);
+  });
+}
+
+// Init
+renderSignals();
+renderPauta();
+loadRealTrends();
+</script>
+
+</body>
+</html>
