@@ -1,29 +1,56 @@
 [
   {
+    "id": 1,
+    "type": "trend",
+    "title": "\"consultoria de marketing\" em queda: buscas caem 55.7% em 4 semanas",
+    "desc": "Interesse medio de busca: 18/100 (Brasil, ultimos 3 meses). Estado com maior interesse: Paraná.",
+    "source": "Google Trends",
+    "date": "2026-08-24",
+    "strength": 18
+  },
+  {
     "id": 2,
     "type": "trend",
-    "title": "\"inteligência de mercado\" em queda: buscas caem 17.4% em 4 semanas",
-    "desc": "Interesse medio de busca: 18/100 (Brasil, ultimos 3 meses).",
+    "title": "\"inteligência de mercado\" em queda: buscas caem 30.2% em 4 semanas",
+    "desc": "Interesse medio de busca: 15/100 (Brasil, ultimos 3 meses). Estado com maior interesse: Sergipe.",
     "source": "Google Trends",
-    "date": "2026-08-17",
-    "strength": 18
+    "date": "2026-08-24",
+    "strength": 15
   },
   {
     "id": 3,
     "type": "trend",
-    "title": "\"dados públicos\" em queda: buscas caem 23.8% em 4 semanas",
-    "desc": "Interesse medio de busca: 36/100 (Brasil, ultimos 3 meses). Estado com maior interesse: Distrito Federal.",
+    "title": "\"dados públicos\" em queda: buscas caem 31.1% em 4 semanas",
+    "desc": "Interesse medio de busca: 31/100 (Brasil, ultimos 3 meses). Estado com maior interesse: Distrito Federal.",
     "source": "Google Trends",
-    "date": "2026-08-17",
-    "strength": 36
+    "date": "2026-08-24",
+    "strength": 31
   },
   {
     "id": 4,
     "type": "trend",
-    "title": "\"análise de dados para marketing\" em alta: buscas sobem 21.4% em 4 semanas",
-    "desc": "Interesse medio de busca: 60/100 (Brasil, ultimos 3 meses). Estado com maior interesse: Ceará.",
+    "title": "\"análise de dados para marketing\" estavel, com forca de busca em 70/100",
+    "desc": "Interesse medio de busca: 70/100 (Brasil, ultimos 3 meses). Estado com maior interesse: Rio Grande do Sul.",
     "source": "Google Trends",
-    "date": "2026-08-17",
-    "strength": 60
+    "date": "2026-08-24",
+    "strength": 70
+  },
+  {
+    "id": 6,
+    "type": "trend",
+    "title": "\"franquia lucrativa\" em queda: buscas caem 25.0% em 4 semanas",
+    "desc": "Interesse medio de busca: 2/100 (Brasil, ultimos 3 meses). Estado com maior interesse: São Paulo.",
+    "source": "Google Trends",
+    "date": "2026-08-24",
+    "strength": 2
+  },
+  {
+    "id": 8,
+    "type": "trend",
+    "title": "\"curso de dados\" em queda: buscas caem 33.3% em 4 semanas",
+    "desc": "Interesse medio de busca: 54/100 (Brasil, ultimos 3 meses). Estado com maior interesse: Distrito Federal.",
+    "source": "Google Trends",
+    "date": "2026-08-24",
+    "strength": 54
   }
 ]
