@@ -1,38 +1,65 @@
 [
   {
+    "id": 1,
+    "type": "trend",
+    "title": "\"consultoria de marketing\" em queda: buscas caem 32.7% em 4 semanas",
+    "desc": "Interesse medio de busca: 18/100 (Brasil, ultimos 3 meses). Estado com maior interesse: Mato Grosso.",
+    "source": "Google Trends",
+    "date": "2026-09-07",
+    "strength": 18
+  },
+  {
     "id": 2,
     "type": "trend",
-    "title": "\"inteligência de mercado\" em queda: buscas caem 22.6% em 4 semanas",
-    "desc": "Interesse medio de busca: 16/100 (Brasil, ultimos 3 meses). Estado com maior interesse: Rondônia.",
+    "title": "\"inteligência de mercado\" estavel, com forca de busca em 40/100",
+    "desc": "Interesse medio de busca: 40/100 (Brasil, ultimos 3 meses). Estado com maior interesse: Mato Grosso do Sul.",
     "source": "Google Trends",
-    "date": "2026-08-31",
-    "strength": 16
+    "date": "2026-09-07",
+    "strength": 40
   },
   {
     "id": 3,
     "type": "trend",
-    "title": "\"dados públicos\" estavel, com forca de busca em 45/100",
-    "desc": "Interesse medio de busca: 45/100 (Brasil, ultimos 3 meses). Estado com maior interesse: Distrito Federal.",
+    "title": "\"dados públicos\" em alta: buscas sobem 16.4% em 4 semanas",
+    "desc": "Interesse medio de busca: 64/100 (Brasil, ultimos 3 meses). Estado com maior interesse: Distrito Federal.",
     "source": "Google Trends",
-    "date": "2026-08-31",
-    "strength": 45
+    "date": "2026-09-07",
+    "strength": 64
   },
   {
     "id": 4,
     "type": "trend",
-    "title": "\"análise de dados para marketing\" estavel, com forca de busca em 0/100",
-    "desc": "Interesse medio de busca: 0/100 (Brasil, ultimos 3 meses). Estado com maior interesse: Pernambuco.",
+    "title": "\"análise de dados para marketing\" em queda: buscas caem 48.2% em 4 semanas",
+    "desc": "Interesse medio de busca: 14/100 (Brasil, ultimos 3 meses). Estado com maior interesse: Paraná.",
     "source": "Google Trends",
-    "date": "2026-08-31",
+    "date": "2026-09-07",
+    "strength": 14
+  },
+  {
+    "id": 5,
+    "type": "trend",
+    "title": "\"onde investir em anúncios\" estavel, com forca de busca em 0/100",
+    "desc": "Interesse medio de busca: 0/100 (Brasil, ultimos 3 meses). Estado com maior interesse: Acre.",
+    "source": "Google Trends",
+    "date": "2026-09-07",
+    "strength": 0
+  },
+  {
+    "id": 6,
+    "type": "trend",
+    "title": "\"franquia lucrativa\" em queda: buscas caem 100.0% em 4 semanas",
+    "desc": "Interesse medio de busca: 0/100 (Brasil, ultimos 3 meses). Estado com maior interesse: Acre.",
+    "source": "Google Trends",
+    "date": "2026-09-07",
     "strength": 0
   },
   {
     "id": 8,
     "type": "trend",
-    "title": "\"curso de dados\" em queda: buscas caem 23.6% em 4 semanas",
-    "desc": "Interesse medio de busca: 56/100 (Brasil, ultimos 3 meses). Estado com maior interesse: Distrito Federal.",
+    "title": "\"curso de dados\" em queda: buscas caem 39.3% em 4 semanas",
+    "desc": "Interesse medio de busca: 42/100 (Brasil, ultimos 3 meses). Estado com maior interesse: Distrito Federal.",
     "source": "Google Trends",
-    "date": "2026-08-31",
-    "strength": 56
+    "date": "2026-09-07",
+    "strength": 42
   }
 ]
