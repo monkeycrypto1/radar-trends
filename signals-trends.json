@@ -1,11 +1,56 @@
 [
   {
+    "id": 1,
+    "type": "trend",
+    "title": "\"consultoria de marketing\" estavel, com forca de busca em 33/100",
+    "desc": "Interesse medio de busca: 33/100 (Brasil, ultimos 3 meses). Estado com maior interesse: Tocantins.",
+    "source": "Google Trends",
+    "date": "2026-09-21",
+    "strength": 33
+  },
+  {
+    "id": 2,
+    "type": "trend",
+    "title": "\"inteligência de mercado\" em queda: buscas caem 59.9% em 4 semanas",
+    "desc": "Interesse medio de busca: 16/100 (Brasil, ultimos 3 meses). Estado com maior interesse: Acre.",
+    "source": "Google Trends",
+    "date": "2026-09-21",
+    "strength": 16
+  },
+  {
+    "id": 3,
+    "type": "trend",
+    "title": "\"dados públicos\" em queda: buscas caem 35.2% em 4 semanas",
+    "desc": "Interesse medio de busca: 27/100 (Brasil, ultimos 3 meses). Estado com maior interesse: Distrito Federal.",
+    "source": "Google Trends",
+    "date": "2026-09-21",
+    "strength": 27
+  },
+  {
+    "id": 4,
+    "type": "trend",
+    "title": "\"análise de dados para marketing\" estavel, com forca de busca em 29/100",
+    "desc": "Interesse medio de busca: 29/100 (Brasil, ultimos 3 meses). Estado com maior interesse: Paraná.",
+    "source": "Google Trends",
+    "date": "2026-09-21",
+    "strength": 29
+  },
+  {
+    "id": 6,
+    "type": "trend",
+    "title": "\"franquia lucrativa\" em queda: buscas caem 100.0% em 4 semanas",
+    "desc": "Interesse medio de busca: 0/100 (Brasil, ultimos 3 meses). Estado com maior interesse: Piauí.",
+    "source": "Google Trends",
+    "date": "2026-09-21",
+    "strength": 0
+  },
+  {
     "id": 8,
     "type": "trend",
-    "title": "\"curso de dados\" estavel, com forca de busca em 56/100",
-    "desc": "Interesse medio de busca: 56/100 (Brasil, ultimos 3 meses). Estado com maior interesse: Distrito Federal.",
+    "title": "\"curso de dados\" em queda: buscas caem 28.3% em 4 semanas",
+    "desc": "Interesse medio de busca: 48/100 (Brasil, ultimos 3 meses). Estado com maior interesse: Roraima.",
     "source": "Google Trends",
-    "date": "2026-09-14",
-    "strength": 56
+    "date": "2026-09-21",
+    "strength": 48
   }
 ]
