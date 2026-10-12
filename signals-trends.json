@@ -2,47 +2,56 @@
   {
     "id": 1,
     "type": "trend",
-    "title": "\"consultoria de marketing\" em queda: buscas caem 20.9% em 4 semanas",
-    "desc": "Interesse medio de busca: 18/100 (Brasil, ultimos 3 meses). Estado com maior interesse: Santa Catarina.",
+    "title": "\"consultoria de marketing\" em queda: buscas caem 45.3% em 4 semanas",
+    "desc": "Interesse medio de busca: 20/100 (Brasil, ultimos 3 meses). Estado com maior interesse: Rio de Janeiro.",
     "source": "Google Trends",
-    "date": "2026-10-05",
-    "strength": 18
+    "date": "2026-10-12",
+    "strength": 20
   },
   {
     "id": 2,
     "type": "trend",
-    "title": "\"inteligência de mercado\" em queda: buscas caem 43.2% em 4 semanas",
-    "desc": "Interesse medio de busca: 24/100 (Brasil, ultimos 3 meses). Estado com maior interesse: Piauí.",
+    "title": "\"inteligência de mercado\" em queda: buscas caem 22.3% em 4 semanas",
+    "desc": "Interesse medio de busca: 32/100 (Brasil, ultimos 3 meses). Consulta relacionada em maior ascensao: \"impactos da inteligência artificial no mercado de trabalho\". Estado com maior interesse: Rio Grande do Norte.",
     "source": "Google Trends",
-    "date": "2026-10-05",
-    "strength": 24
+    "date": "2026-10-12",
+    "strength": 32
   },
   {
     "id": 3,
     "type": "trend",
-    "title": "\"dados públicos\" em queda: buscas caem 43.5% em 4 semanas",
-    "desc": "Interesse medio de busca: 22/100 (Brasil, ultimos 3 meses). Estado com maior interesse: Distrito Federal.",
+    "title": "\"dados públicos\" em queda: buscas caem 18.2% em 4 semanas",
+    "desc": "Interesse medio de busca: 35/100 (Brasil, ultimos 3 meses). Estado com maior interesse: Distrito Federal.",
     "source": "Google Trends",
-    "date": "2026-10-05",
-    "strength": 22
+    "date": "2026-10-12",
+    "strength": 35
   },
   {
     "id": 4,
     "type": "trend",
-    "title": "\"análise de dados para marketing\" em queda: buscas caem 23.4% em 4 semanas",
-    "desc": "Interesse medio de busca: 56/100 (Brasil, ultimos 3 meses). Estado com maior interesse: Paraná.",
+    "title": "\"análise de dados para marketing\" em queda: buscas caem 35.3% em 4 semanas",
+    "desc": "Interesse medio de busca: 16/100 (Brasil, ultimos 3 meses). Estado com maior interesse: Paraná.",
     "source": "Google Trends",
-    "date": "2026-10-05",
-    "strength": 56
+    "date": "2026-10-12",
+    "strength": 16
+  },
+  {
+    "id": 5,
+    "type": "trend",
+    "title": "\"onde investir em anúncios\" estavel, com forca de busca em 0/100",
+    "desc": "Interesse medio de busca: 0/100 (Brasil, ultimos 3 meses). Estado com maior interesse: Amapá.",
+    "source": "Google Trends",
+    "date": "2026-10-12",
+    "strength": 0
   },
   {
     "id": 6,
     "type": "trend",
     "title": "\"franquia lucrativa\" em alta: buscas sobem 100.0% em 4 semanas",
-    "desc": "Interesse medio de busca: 19/100 (Brasil, ultimos 3 meses). Estado com maior interesse: São Paulo.",
+    "desc": "Interesse medio de busca: 18/100 (Brasil, ultimos 3 meses). Estado com maior interesse: São Paulo.",
     "source": "Google Trends",
-    "date": "2026-10-05",
-    "strength": 19
+    "date": "2026-10-12",
+    "strength": 18
   },
   {
     "id": 7,
@@ -50,16 +59,16 @@
     "title": "\"abrir empresa no interior\" em queda: buscas caem 100.0% em 4 semanas",
     "desc": "Interesse medio de busca: 0/100 (Brasil, ultimos 3 meses). Estado com maior interesse: Acre.",
     "source": "Google Trends",
-    "date": "2026-10-05",
+    "date": "2026-10-12",
     "strength": 0
   },
   {
     "id": 8,
     "type": "trend",
-    "title": "\"curso de dados\" em queda: buscas caem 40.1% em 4 semanas",
-    "desc": "Interesse medio de busca: 42/100 (Brasil, ultimos 3 meses). Estado com maior interesse: Distrito Federal.",
+    "title": "\"curso de dados\" em queda: buscas caem 27.1% em 4 semanas",
+    "desc": "Interesse medio de busca: 28/100 (Brasil, ultimos 3 meses). Estado com maior interesse: Distrito Federal.",
     "source": "Google Trends",
-    "date": "2026-10-05",
-    "strength": 42
+    "date": "2026-10-12",
+    "strength": 28
   }
 ]
